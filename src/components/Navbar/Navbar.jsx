@@ -1,6 +1,11 @@
 
 import React, { useState } from "react";
-import { Link, NavLink } from "react-router-dom";
+import { Link, NavLink, useNavigate } from "react-router-dom";
+
+import {
+  FaShoppingCart,
+  FaHeart,
+} from "react-icons/fa";
 
 import bookmyprob from "../../assets/bookmyprob.jpg";
 import bmptext from "../../assets/bmptext.jpg";
@@ -10,16 +15,34 @@ import citiesData from "../../data/citiesData";
 
 import { isAdminAuthenticated } from "../../utils/auth";
 
+// CART
+import { useCart } from "../../context/CartContext";
+
 const fallbackLogo =
   "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=200&q=80";
 
 const Navbar = () => {
+  const navigate = useNavigate();
+
   const [designOpen, setDesignOpen] = useState(false);
   const [citiesOpen, setCitiesOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
 
-  // ================= ADMIN LOGIN STATUS =================
+  // ======================================================
+  // CART
+  // ======================================================
+
+  const { cartCount } = useCart();
+
+  // ======================================================
+  // ADMIN LOGIN STATUS
+  // ======================================================
+
   const isLoggedIn = isAdminAuthenticated();
+
+  // ======================================================
+  // NAVIGATION LINKS
+  // ======================================================
 
   const links = [
     {
@@ -44,11 +67,19 @@ const Navbar = () => {
     },
   ];
 
+  // ======================================================
+  // CLOSE MENUS
+  // ======================================================
+
   const closeMenus = () => {
     setDesignOpen(false);
     setCitiesOpen(false);
     setMoreOpen(false);
   };
+
+  // ======================================================
+  // DESIGN MENU
+  // ======================================================
 
   const toggleDesign = () => {
     setDesignOpen((prev) => !prev);
@@ -56,11 +87,19 @@ const Navbar = () => {
     setMoreOpen(false);
   };
 
+  // ======================================================
+  // CITIES MENU
+  // ======================================================
+
   const toggleCities = () => {
     setCitiesOpen((prev) => !prev);
     setDesignOpen(false);
     setMoreOpen(false);
   };
+
+  // ======================================================
+  // MORE MENU
+  // ======================================================
 
   const toggleMore = () => {
     setMoreOpen((prev) => !prev);
@@ -68,18 +107,43 @@ const Navbar = () => {
     setCitiesOpen(false);
   };
 
+  // ======================================================
+  // CART CLICK
+  // ======================================================
+
+  const handleCartClick = () => {
+    closeMenus();
+    navigate("/cart");
+  };
+
+  // ======================================================
+  // WISHLIST CLICK
+  // ======================================================
+
+  const handleWishlistClick = () => {
+    closeMenus();
+    navigate("/wishlist");
+  };
+
   return (
     <header className="fixed z-50 w-full bg-white shadow-sm">
+
       <nav className="max-w-7xl mx-auto px-6 py-2 flex items-center justify-between">
 
-        {/* ================= LOGO ================= */}
+        {/* ==================================================
+            LOGO
+        ================================================== */}
+
         <Link
           to="/"
           onClick={closeMenus}
           className="flex items-center gap-1 shrink-0"
         >
+
           {/* ROUND LOGO */}
+
           <div className="w-12 h-12 rounded-full overflow-hidden shrink-0">
+
             <img
               src={bookmyprob}
               alt="Book My Problem"
@@ -89,28 +153,39 @@ const Navbar = () => {
               }}
               className="w-full h-full object-cover scale-125"
             />
+
           </div>
 
-          {/* BOOK MY PROBLEM IMAGE */}
+          {/* BOOK MY PROBLEM TEXT */}
+
           <img
             src={bmptext}
             alt="Book My Problem"
             className="w-30 h-12 object-contain"
           />
+
         </Link>
 
-        {/* ================= NAVIGATION ================= */}
+        {/* ==================================================
+            NAVIGATION
+        ================================================== */}
+
         <div className="hidden md:flex items-center gap-7">
 
           {links.map((link) => (
+
             <div
               key={link.name}
               className="relative py-2 group"
             >
 
-              {/* ================= DESIGN ================= */}
+              {/* ==================================================
+                  DESIGN
+              ================================================== */}
+
               {link.name === "Design" && (
                 <>
+
                   <button
                     type="button"
                     onClick={toggleDesign}
@@ -130,20 +205,27 @@ const Navbar = () => {
                     Design
 
                     <span
-                      className={`text-xs transition-transform duration-200 ${
-                        designOpen ? "rotate-180" : ""
-                      }`}
+                      className={`
+                        text-xs
+                        transition-transform
+                        duration-200
+                        ${designOpen ? "rotate-180" : ""}
+                      `}
                     >
                       ▼
                     </span>
+
                   </button>
 
                   {/* DESIGN DROPDOWN */}
+
                   {designOpen && (
                     <div className="absolute left-1/2 -translate-x-1/2 top-full pt-3 z-50">
+
                       <div className="w-80 max-h-[70vh] overflow-y-auto bg-white rounded-xl shadow-2xl border border-gray-100 p-2">
 
                         {designData.map((category) => (
+
                           <Link
                             key={category.id}
                             to={`/design/${category.slug}`}
@@ -161,6 +243,7 @@ const Navbar = () => {
                               transition
                             "
                           >
+
                             <span className="font-medium">
                               {category.name}
                             </span>
@@ -168,7 +251,9 @@ const Navbar = () => {
                             <span className="text-xs text-gray-400">
                               {category.images?.length || 0}
                             </span>
+
                           </Link>
+
                         ))}
 
                         <Link
@@ -190,15 +275,22 @@ const Navbar = () => {
                         >
                           View All Designs
                         </Link>
+
                       </div>
+
                     </div>
                   )}
+
                 </>
               )}
 
-              {/* ================= CITIES ================= */}
+              {/* ==================================================
+                  CITIES
+              ================================================== */}
+
               {link.name === "Cities" && (
                 <>
+
                   <button
                     type="button"
                     onClick={toggleCities}
@@ -218,20 +310,27 @@ const Navbar = () => {
                     Cities
 
                     <span
-                      className={`text-xs transition-transform duration-200 ${
-                        citiesOpen ? "rotate-180" : ""
-                      }`}
+                      className={`
+                        text-xs
+                        transition-transform
+                        duration-200
+                        ${citiesOpen ? "rotate-180" : ""}
+                      `}
                     >
                       ▼
                     </span>
+
                   </button>
 
                   {/* CITIES DROPDOWN */}
+
                   {citiesOpen && (
                     <div className="absolute left-1/2 -translate-x-1/2 top-full pt-3 z-50">
+
                       <div className="w-80 max-h-[70vh] overflow-y-auto bg-white rounded-xl shadow-2xl border border-gray-100 p-2">
 
                         {citiesData.map((city) => (
+
                           <Link
                             key={city.id}
                             to={`/cities/${city.slug}`}
@@ -248,7 +347,7 @@ const Navbar = () => {
                               transition
                             "
                           >
-                            {/* CITY IMAGE */}
+
                             <img
                               src={city.image}
                               alt={city.name}
@@ -261,8 +360,8 @@ const Navbar = () => {
                               "
                             />
 
-                            {/* CITY INFO */}
                             <div className="flex-1 min-w-0">
+
                               <p
                                 className="
                                   text-sm
@@ -277,16 +376,17 @@ const Navbar = () => {
                               <p className="text-xs text-gray-400 truncate">
                                 {city.stats?.liveProjects || 0} live projects
                               </p>
+
                             </div>
 
-                            {/* PROJECT COUNT */}
                             <span className="text-xs text-gray-400">
                               {city.projects?.length || 0}
                             </span>
+
                           </Link>
+
                         ))}
 
-                        {/* VIEW ALL CITIES */}
                         <Link
                           to="/cities"
                           onClick={closeMenus}
@@ -306,15 +406,22 @@ const Navbar = () => {
                         >
                           View All Cities
                         </Link>
+
                       </div>
+
                     </div>
                   )}
+
                 </>
               )}
 
-              {/* ================= MORE ================= */}
+              {/* ==================================================
+                  MORE
+              ================================================== */}
+
               {link.name === "More" && (
                 <>
+
                   <button
                     type="button"
                     onClick={toggleMore}
@@ -334,20 +441,27 @@ const Navbar = () => {
                     More
 
                     <span
-                      className={`text-xs transition-transform duration-200 ${
-                        moreOpen ? "rotate-180" : ""
-                      }`}
+                      className={`
+                        text-xs
+                        transition-transform
+                        duration-200
+                        ${moreOpen ? "rotate-180" : ""}
+                      `}
                     >
                       ▼
                     </span>
+
                   </button>
 
                   {/* MORE DROPDOWN */}
+
                   {moreOpen && (
                     <div className="absolute left-1/2 -translate-x-1/2 top-full pt-3 z-50">
+
                       <div className="w-64 bg-white rounded-xl shadow-2xl border border-gray-100 p-2">
 
                         {/* ABOUT */}
+
                         <Link
                           to="/about"
                           onClick={closeMenus}
@@ -372,6 +486,7 @@ const Navbar = () => {
                         </Link>
 
                         {/* HOW IT WORKS */}
+
                         <Link
                           to="/how-it-works"
                           onClick={closeMenus}
@@ -396,6 +511,7 @@ const Navbar = () => {
                         </Link>
 
                         {/* PROFESSIONALS */}
+
                         <Link
                           to="/professionals"
                           onClick={closeMenus}
@@ -420,6 +536,7 @@ const Navbar = () => {
                         </Link>
 
                         {/* REVIEWS */}
+
                         <Link
                           to="/reviews"
                           onClick={closeMenus}
@@ -444,6 +561,7 @@ const Navbar = () => {
                         </Link>
 
                         {/* FAQ */}
+
                         <Link
                           to="/faqs"
                           onClick={closeMenus}
@@ -468,15 +586,21 @@ const Navbar = () => {
                         </Link>
 
                       </div>
+
                     </div>
                   )}
+
                 </>
               )}
 
-              {/* ================= OTHER LINKS ================= */}
+              {/* ==================================================
+                  OTHER LINKS
+              ================================================== */}
+
               {link.name !== "Design" &&
                 link.name !== "Cities" &&
                 link.name !== "More" && (
+
                   <NavLink
                     to={link.path}
                     end={link.path === "/"}
@@ -495,16 +619,110 @@ const Navbar = () => {
                   >
                     {link.name}
                   </NavLink>
+
                 )}
+
             </div>
+
           ))}
 
         </div>
 
-        {/* ================= RIGHT BUTTONS ================= */}
+        {/* ==================================================
+            RIGHT SIDE
+        ================================================== */}
+
         <div className="flex items-center gap-3">
 
-          {/* ================= LOGIN ================= */}
+         
+      {/* ==================================================
+          WISHLIST
+      ================================================== */}
+
+      <button
+        type="button"
+        onClick={handleWishlistClick}
+        aria-label="Wishlist"
+        title="Wishlist"
+        className="
+          relative
+          w-10
+          h-10
+          rounded-full
+          flex
+          items-center
+          justify-center
+          text-[#072144]
+          hover:bg-red-50
+          hover:text-red-600
+          transition
+          duration-200
+        "
+      >
+        <FaHeart className="text-lg transition-colors duration-200" />
+      </button>
+
+
+
+          {/* ==================================================
+              CART
+          ================================================== */}
+
+          <button
+            type="button"
+            onClick={handleCartClick}
+            aria-label="Cart"
+            title="Cart"
+            className="
+              relative
+              w-10
+              h-10
+              rounded-full
+              flex
+              items-center
+              justify-center
+              text-[#072144]
+              hover:bg-yellow-50
+              hover:text-[#FCBC14]
+              transition
+            "
+          >
+
+            <FaShoppingCart className="text-lg" />
+
+            {/* CART COUNT */}
+
+            {cartCount > 0 && (
+              <span
+                className="
+                  absolute
+                  -top-1
+                  -right-1
+                  min-w-[20px]
+                  h-5
+                  px-1
+                  rounded-full
+                  bg-[#FCBC14]
+                  text-[#072144]
+                  text-[11px]
+                  font-bold
+                  flex
+                  items-center
+                  justify-center
+                  border-2
+                  border-white
+                "
+              >
+                {cartCount > 99 ? "99+" : cartCount}
+              </span>
+            )}
+
+          </button>
+
+          {/* ==================================================
+              LOGIN
+          ================================================== */}
+
           {!isLoggedIn && (
             <Link
               to="/login"
@@ -522,7 +740,10 @@ const Navbar = () => {
             </Link>
           )}
 
-          {/* ================= GET STARTED ================= */}
+          {/* ==================================================
+              GET STARTED
+          ================================================== */}
+
           <Link
             to="/contact"
             onClick={closeMenus}
@@ -543,6 +764,7 @@ const Navbar = () => {
         </div>
 
       </nav>
+
     </header>
   );
 };

@@ -1,4 +1,3 @@
-
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import {
@@ -28,7 +27,7 @@ const Register = () => {
   });
 
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
 
   // =====================================================
   // HANDLE INPUT
@@ -43,7 +42,6 @@ const Register = () => {
     }));
 
     setError("");
-    setSuccess("");
   };
 
   // =====================================================
@@ -52,11 +50,23 @@ const Register = () => {
 
   const generateCustomerId = () => {
     const existingCustomers =
-      JSON.parse(localStorage.getItem("bookmyproblem_customers")) || [];
+      JSON.parse(
+        localStorage.getItem("bookmyproblem_customers")
+      ) || [];
 
     const nextNumber = existingCustomers.length + 1001;
 
     return `CUS-${nextNumber}`;
+  };
+
+  // =====================================================
+  // GENERATE OTP
+  // =====================================================
+
+  const generateOTP = () => {
+    return Math.floor(
+      100000 + Math.random() * 900000
+    ).toString();
   };
 
   // =====================================================
@@ -67,120 +77,141 @@ const Register = () => {
     e.preventDefault();
 
     setError("");
-    setSuccess("");
+    setLoading(true);
 
+    const name = formData.name.trim();
+    const email = formData.email.trim().toLowerCase();
+    const phone = formData.phone.trim();
+
+    // =====================================================
+    // BASIC VALIDATION
+    // =====================================================
+
+    if (!name) {
+      setError("Please enter your full name.");
+      setLoading(false);
+      return;
+    }
+
+    if (!email) {
+      setError("Please enter your email address.");
+      setLoading(false);
+      return;
+    }
+
+    if (!phone) {
+      setError("Please enter your phone number.");
+      setLoading(false);
+      return;
+    }
+
+    // =====================================================
     // PASSWORD CHECK
+    // =====================================================
+
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match.");
+      setLoading(false);
       return;
     }
 
-    // PASSWORD LENGTH
     if (formData.password.length < 6) {
       setError("Password must be at least 6 characters.");
+      setLoading(false);
       return;
     }
 
+    // =====================================================
     // TERMS CHECK
+    // =====================================================
+
     if (!formData.terms) {
-      setError("Please accept the Terms & Conditions.");
+      setError(
+        "Please accept the Terms & Conditions."
+      );
+      setLoading(false);
       return;
     }
 
+    // =====================================================
     // GET EXISTING CUSTOMERS
-    const existingCustomers =
-      JSON.parse(localStorage.getItem("bookmyproblem_customers")) || [];
+    // =====================================================
 
+    const existingCustomers =
+      JSON.parse(
+        localStorage.getItem("bookmyproblem_customers")
+      ) || [];
+
+    // =====================================================
     // CHECK DUPLICATE EMAIL
+    // =====================================================
+
     const emailExists = existingCustomers.some(
       (customer) =>
-        customer.email.toLowerCase() ===
-        formData.email.trim().toLowerCase()
+        customer.email?.toLowerCase() === email
     );
 
     if (emailExists) {
-      setError("An account with this email already exists.");
+      setError(
+        "An account with this email already exists."
+      );
+      setLoading(false);
       return;
     }
 
     // =====================================================
-    // CUSTOMER OBJECT
+    // GENERATE OTP
     // =====================================================
 
-    const newCustomer = {
+    const otp = generateOTP();
+
+    // =====================================================
+    // TEMPORARY REGISTRATION DATA
+    // =====================================================
+
+    const pendingRegistration = {
       id: generateCustomerId(),
 
-      name: formData.name.trim(),
+      name,
 
-      email: formData.email.trim().toLowerCase(),
+      email,
 
-      phone: formData.phone.trim(),
+      phone,
 
-      // CUSTOMER INFORMATION
-      projectNo: "Not Assigned",
-      projectName: "No Project Yet",
-      address: "Not Provided",
-      city: "Not Provided",
-
-      // ACCOUNT INFORMATION
       password: formData.password,
 
-      status: "Active",
+      otp,
 
-      joined: new Date().toISOString(),
+      otpCreatedAt: Date.now(),
 
-      // PROJECT COUNT
-      totalProjects: 0,
-
-      // PAYMENT
-      totalSpent: 0,
+      verified: false,
     };
 
     // =====================================================
-    // SAVE CUSTOMER
-    // =====================================================
-
-    const updatedCustomers = [
-      ...existingCustomers,
-      newCustomer,
-    ];
-
-    localStorage.setItem(
-      "bookmyproblem_customers",
-      JSON.stringify(updatedCustomers)
-    );
-
-    // =====================================================
-    // SAVE CURRENT CUSTOMER
+    // SAVE PENDING REGISTRATION
     // =====================================================
 
     localStorage.setItem(
-      "bookmyproblem_current_customer",
-      JSON.stringify(newCustomer)
+      "bookmyproblem_pending_registration",
+      JSON.stringify(pendingRegistration)
     );
 
     // =====================================================
-    // SUCCESS
+    // DEVELOPMENT ONLY
     // =====================================================
 
-    setSuccess(
-      "Account created successfully! Redirecting to login..."
+    console.log(
+      "BOOK MY PROBLEM OTP:",
+      otp
     );
 
-    // CLEAR FORM
-    setFormData({
-      name: "",
-      email: "",
-      phone: "",
-      password: "",
-      confirmPassword: "",
-      terms: false,
-    });
+    // =====================================================
+    // GO TO OTP PAGE
+    // =====================================================
 
-    // GO TO LOGIN
-    setTimeout(() => {
-      navigate("/login");
-    }, 1200);
+    setLoading(false);
+
+    navigate("/verify-otp");
   };
 
   return (
@@ -191,10 +222,12 @@ const Register = () => {
       ===================================================== */}
 
       <div className="px-5 sm:px-8 py-6">
+
         <Link
           to="/"
           className="inline-flex items-center gap-2"
         >
+
           <div className="w-10 h-10 bg-[#072144] text-white rounded-lg flex items-center justify-center">
             <FaHome />
           </div>
@@ -205,7 +238,9 @@ const Register = () => {
               Problem
             </span>
           </span>
+
         </Link>
+
       </div>
 
       {/* =====================================================
@@ -266,7 +301,8 @@ const Register = () => {
               </h1>
 
               <p className="mt-3 text-gray-500">
-                Create your account and start your home journey.
+                Create your account and verify your email
+                before continuing.
               </p>
 
               {/* =================================================
@@ -280,16 +316,6 @@ const Register = () => {
               )}
 
               {/* =================================================
-                  SUCCESS
-              ================================================= */}
-
-              {success && (
-                <div className="mt-5 bg-green-50 border border-green-200 text-green-600 px-4 py-3 rounded-lg text-sm">
-                  {success}
-                </div>
-              )}
-
-              {/* =================================================
                   FORM
               ================================================= */}
 
@@ -298,7 +324,7 @@ const Register = () => {
                 className="mt-7 space-y-4"
               >
 
-                {/* ================= NAME ================= */}
+                {/* NAME */}
 
                 <div>
 
@@ -317,26 +343,14 @@ const Register = () => {
                       onChange={handleChange}
                       required
                       placeholder="Enter your full name"
-                      className="
-                        w-full
-                        border
-                        border-gray-300
-                        rounded-lg
-                        pl-11
-                        pr-4
-                        py-3.5
-                        outline-none
-                        focus:border-[#072144]
-                        focus:ring-1
-                        focus:ring-[#072144]
-                      "
+                      className="w-full border border-gray-300 rounded-lg pl-11 pr-4 py-3.5 outline-none focus:border-[#072144] focus:ring-1 focus:ring-[#072144]"
                     />
 
                   </div>
 
                 </div>
 
-                {/* ================= EMAIL ================= */}
+                {/* EMAIL */}
 
                 <div>
 
@@ -355,26 +369,14 @@ const Register = () => {
                       onChange={handleChange}
                       required
                       placeholder="Enter your email"
-                      className="
-                        w-full
-                        border
-                        border-gray-300
-                        rounded-lg
-                        pl-11
-                        pr-4
-                        py-3.5
-                        outline-none
-                        focus:border-[#072144]
-                        focus:ring-1
-                        focus:ring-[#072144]
-                      "
+                      className="w-full border border-gray-300 rounded-lg pl-11 pr-4 py-3.5 outline-none focus:border-[#072144] focus:ring-1 focus:ring-[#072144]"
                     />
 
                   </div>
 
                 </div>
 
-                {/* ================= PHONE ================= */}
+                {/* PHONE */}
 
                 <div>
 
@@ -393,26 +395,14 @@ const Register = () => {
                       onChange={handleChange}
                       required
                       placeholder="Enter your phone number"
-                      className="
-                        w-full
-                        border
-                        border-gray-300
-                        rounded-lg
-                        pl-11
-                        pr-4
-                        py-3.5
-                        outline-none
-                        focus:border-[#072144]
-                        focus:ring-1
-                        focus:ring-[#072144]
-                      "
+                      className="w-full border border-gray-300 rounded-lg pl-11 pr-4 py-3.5 outline-none focus:border-[#072144] focus:ring-1 focus:ring-[#072144]"
                     />
 
                   </div>
 
                 </div>
 
-                {/* ================= PASSWORD ================= */}
+                {/* PASSWORD */}
 
                 <div>
 
@@ -436,34 +426,17 @@ const Register = () => {
                       required
                       minLength="6"
                       placeholder="Enter password"
-                      className="
-                        w-full
-                        border
-                        border-gray-300
-                        rounded-lg
-                        pl-11
-                        pr-12
-                        py-3.5
-                        outline-none
-                        focus:border-[#072144]
-                        focus:ring-1
-                        focus:ring-[#072144]
-                      "
+                      className="w-full border border-gray-300 rounded-lg pl-11 pr-12 py-3.5 outline-none focus:border-[#072144] focus:ring-1 focus:ring-[#072144]"
                     />
 
                     <button
                       type="button"
                       onClick={() =>
-                        setShowPassword(!showPassword)
+                        setShowPassword(
+                          !showPassword
+                        )
                       }
-                      className="
-                        absolute
-                        right-4
-                        top-1/2
-                        -translate-y-1/2
-                        text-gray-400
-                        hover:text-gray-700
-                      "
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700"
                     >
                       {showPassword ? (
                         <FaEyeSlash />
@@ -476,7 +449,7 @@ const Register = () => {
 
                 </div>
 
-                {/* ================= CONFIRM PASSWORD ================= */}
+                {/* CONFIRM PASSWORD */}
 
                 <div>
 
@@ -500,19 +473,7 @@ const Register = () => {
                       required
                       minLength="6"
                       placeholder="Confirm password"
-                      className="
-                        w-full
-                        border
-                        border-gray-300
-                        rounded-lg
-                        pl-11
-                        pr-12
-                        py-3.5
-                        outline-none
-                        focus:border-[#072144]
-                        focus:ring-1
-                        focus:ring-[#072144]
-                      "
+                      className="w-full border border-gray-300 rounded-lg pl-11 pr-12 py-3.5 outline-none focus:border-[#072144] focus:ring-1 focus:ring-[#072144]"
                     />
 
                     <button
@@ -522,14 +483,7 @@ const Register = () => {
                           !showConfirmPassword
                         )
                       }
-                      className="
-                        absolute
-                        right-4
-                        top-1/2
-                        -translate-y-1/2
-                        text-gray-400
-                        hover:text-gray-700
-                      "
+                      className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700"
                     >
                       {showConfirmPassword ? (
                         <FaEyeSlash />
@@ -542,7 +496,7 @@ const Register = () => {
 
                 </div>
 
-                {/* ================= TERMS ================= */}
+                {/* TERMS */}
 
                 <div className="flex items-start gap-3">
 
@@ -560,53 +514,47 @@ const Register = () => {
                     className="text-sm text-gray-500"
                   >
                     I agree to the{" "}
+
                     <Link
                       to="/terms"
                       className="text-[#072144] font-medium hover:underline"
                     >
                       Terms & Conditions
-                    </Link>{" "}
-                    and{" "}
+                    </Link>
+
+                    {" "}and{" "}
+
                     <Link
                       to="/privacy"
                       className="text-[#072144] font-medium hover:underline"
                     >
                       Privacy Policy
                     </Link>
+
                     .
                   </label>
 
                 </div>
 
-                {/* ================= SUBMIT ================= */}
+                {/* SUBMIT */}
 
                 <button
                   type="submit"
-                  className="
-                    w-full
-                    flex
-                    items-center
-                    justify-center
-                    gap-3
-                    bg-[#072144]
-                    text-white
-                    py-3.5
-                    rounded-lg
-                    font-semibold
-                    hover:bg-[#FCBC14]
-                    hover:text-[#072144]
-                    transition
-                  "
+                  disabled={loading}
+                  className="w-full flex items-center justify-center gap-3 bg-[#072144] text-white py-3.5 rounded-lg font-semibold hover:bg-[#FCBC14] hover:text-[#072144] transition disabled:opacity-60"
                 >
-                  Create Account
-                  <FaArrowRight />
+
+                  {loading
+                    ? "Sending OTP..."
+                    : "Create Account"}
+
+                  {!loading && <FaArrowRight />}
+
                 </button>
 
               </form>
 
-              {/* =================================================
-                  LOGIN
-              ================================================= */}
+              {/* LOGIN */}
 
               <p className="mt-7 text-center text-sm text-gray-500">
 
@@ -634,4 +582,3 @@ const Register = () => {
 };
 
 export default Register;
-

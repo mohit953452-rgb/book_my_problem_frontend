@@ -9,16 +9,20 @@ const ProjectCard = ({ project }) => {
   const fallbackImage =
     "https://images.unsplash.com/photo-1512918728675-ed5a9ecdebfd?auto=format&fit=crop&w=1400&q=80";
 
+  if (!project) return null;
+
   return (
     <article className="group relative bg-white rounded-2xl overflow-hidden border border-gray-100 shadow-sm hover:shadow-xl transition-all duration-300">
 
-      {/* Image */}
+      {/* ================= IMAGE ================= */}
+
       <div className="relative h-72 overflow-hidden">
 
         <img
           src={project.image || fallbackImage}
-          alt={project.title}
+          alt={project.title || "Project"}
           onError={(e) => {
+            e.currentTarget.onerror = null;
             e.currentTarget.src = fallbackImage;
           }}
           className="
@@ -31,7 +35,8 @@ const ProjectCard = ({ project }) => {
           "
         />
 
-        {/* Hover Overlay */}
+        {/* ================= HOVER OVERLAY ================= */}
+
         <div
           className="
             absolute inset-0
@@ -54,10 +59,12 @@ const ProjectCard = ({ project }) => {
               {project.title}
             </h3>
 
-            <div className="mt-2 flex items-center gap-2 text-sm text-gray-200">
-              <FaMapMarkerAlt />
-              {project.location}
-            </div>
+            {project.location && (
+              <div className="mt-2 flex items-center gap-2 text-sm text-gray-200">
+                <FaMapMarkerAlt />
+                {project.location}
+              </div>
+            )}
 
             <Link
               to={`/projects/${project.slug}`}
@@ -87,7 +94,8 @@ const ProjectCard = ({ project }) => {
 
       </div>
 
-      {/* Card Content */}
+      {/* ================= CARD CONTENT ================= */}
+
       <div className="p-5">
 
         <div className="flex items-center justify-between gap-3">

@@ -1,7 +1,6 @@
 
 import React, { useState } from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-
+import { Link, useNavigate } from "react-router-dom";
 import {
   FaEnvelope,
   FaLock,
@@ -13,19 +12,24 @@ import {
 import bookmyprob from "../../assets/bookmyprob.jpg";
 import bmptext from "../../assets/bmptext.jpg";
 
-const Login = () => {
+import { loginAdmin } from "../../utils/auth";
+
+const AdminLogin = () => {
   const navigate = useNavigate();
-  const location = useLocation();
 
   const [showPassword, setShowPassword] = useState(false);
 
   const [formData, setFormData] = useState({
-    email: location.state?.email || "",
+    email: "",
     password: "",
   });
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  // =====================================================
+  // HANDLE INPUT CHANGE
+  // =====================================================
 
   const handleChange = (e) => {
     setFormData((prev) => ({
@@ -36,100 +40,115 @@ const Login = () => {
     setError("");
   };
 
+  // =====================================================
+  // HANDLE LOGIN
+  // =====================================================
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
     setError("");
     setLoading(true);
 
-    try {
-      const savedCustomers = localStorage.getItem(
-        "bookmyproblem_customers"
+    const result = loginAdmin(
+      formData.email.trim(),
+      formData.password
+    );
+
+    console.log("ADMIN LOGIN RESULT:", result);
+
+    // ===================================================
+    // LOGIN SUCCESS
+    // ===================================================
+
+    if (result.success) {
+      /*
+       * IMPORTANT:
+       *
+       * loginAdmin() already saves:
+       *
+       * bookmyproblem_admin
+       * bookmyproblem_current_admin
+       *
+       * Isliye yahan dobara localStorage.setItem()
+       * nahi karna hai.
+       */
+
+      console.log(
+        "ADMIN LOGIN SUCCESS:",
+        result.user
       );
 
-      const customers = savedCustomers
-        ? JSON.parse(savedCustomers)
-        : [];
+      /*
+       * Admin Dashboard par redirect
+       *
+       * replace: true ka matlab login page
+       * browser history mein unnecessary nahi rahega.
+       */
+      navigate("/admin/dashboard", {
+        replace: true,
+      });
 
-      const email = formData.email.trim().toLowerCase();
-
-      const customer = customers.find(
-        (item) =>
-          item.email?.toLowerCase() === email &&
-          item.password === formData.password
-      );
-
-      if (!customer) {
-        setError("Invalid email or password.");
-        setLoading(false);
-        return;
-      }
-
-      if (customer.emailVerified !== true) {
-        setError(
-          "Your email is not verified. Please complete OTP verification."
-        );
-        setLoading(false);
-        return;
-      }
-
-      // Save logged-in customer
-      localStorage.setItem(
-        "bookmyproblem_current_customer",
-        JSON.stringify(customer)
-      );
-
-      // Go to location
-      navigate("/location");
-    } catch (error) {
-      console.error("Customer login error:", error);
-
-      setError(
-        "Something went wrong while logging in. Please try again."
-      );
+      return;
     }
+
+    // ===================================================
+    // LOGIN FAILED
+    // ===================================================
+
+    setError(
+      result.message ||
+        "Invalid admin email or password."
+    );
 
     setLoading(false);
   };
 
+  // =====================================================
+  // UI
+  // =====================================================
+
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
 
-      {/* ================= HEADER ================= */}
+      {/* =================================================
+          HEADER
+      ================================================= */}
 
       <div className="px-5 sm:px-8 py-6">
-
         <Link
           to="/"
           className="inline-flex items-center gap-2"
         >
+          {/* Logo */}
           <div className="w-12 h-12 bg-[#072144] rounded-full flex items-center justify-center overflow-hidden">
-
             <img
               src={bookmyprob}
               alt="Book My Problem"
               className="w-full h-full object-cover"
             />
-
           </div>
 
+          {/* Logo Text */}
           <img
             src={bmptext}
             alt="Book My Problem"
             className="w-30 h-12 object-contain"
           />
-
         </Link>
-
       </div>
 
-      {/* ================= MAIN ================= */}
+      {/* =================================================
+          MAIN
+      ================================================= */}
 
       <main className="flex-1 flex items-center justify-center px-4 py-10">
 
         <div className="w-full max-w-5xl bg-white rounded-2xl shadow-xl overflow-hidden grid lg:grid-cols-2">
 
-          {/* ================= IMAGE ================= */}
+          {/* =================================================
+              LEFT IMAGE
+          ================================================= */}
 
           <div className="hidden lg:block relative min-h-[620px]">
 
@@ -144,30 +163,32 @@ const Login = () => {
             <div className="relative z-10 h-full flex flex-col justify-end p-10 text-white">
 
               <span className="text-blue-200 font-semibold text-sm">
-                WELCOME BACK
+                ADMIN PORTAL
               </span>
 
               <h2 className="mt-3 text-4xl font-bold">
-                Build the home you've always wanted.
+                Manage Book My Problem.
               </h2>
 
               <p className="mt-5 text-gray-200">
-                Login to continue your home improvement journey
-                with Book My Problem.
+                Access projects, customers,
+                professionals, payments and reports
+                from your admin dashboard.
               </p>
 
             </div>
-
           </div>
 
-          {/* ================= FORM ================= */}
+          {/* =================================================
+              LOGIN FORM
+          ================================================= */}
 
           <div className="p-6 sm:p-10 lg:p-12 flex items-center">
 
             <div className="w-full max-w-md mx-auto">
 
               <span className="text-[#072144] font-semibold text-sm">
-                CUSTOMER LOGIN
+                ADMIN LOGIN
               </span>
 
               <h1 className="mt-2 text-3xl sm:text-4xl font-bold text-gray-900">
@@ -175,10 +196,12 @@ const Login = () => {
               </h1>
 
               <p className="mt-3 text-gray-500">
-                Login to book services and manage your projects.
+                Login to access your admin account.
               </p>
 
-              {/* ================= ERROR ================= */}
+              {/* =================================================
+                  ERROR
+              ================================================= */}
 
               {error && (
                 <div className="mt-5 rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-600">
@@ -186,26 +209,27 @@ const Login = () => {
                 </div>
               )}
 
-              {/* ================= FORM ================= */}
+              {/* =================================================
+                  FORM
+              ================================================= */}
 
               <form
                 onSubmit={handleSubmit}
                 className="mt-8 space-y-5"
               >
 
-                {/* ================= EMAIL ================= */}
+                {/* =================================================
+                    EMAIL
+                ================================================= */}
 
                 <div>
-
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Email Address
                   </label>
 
                   <div className="relative">
 
-                    <FaEnvelope
-                      className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
-                    />
+                    <FaEnvelope className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
 
                     <input
                       type="email"
@@ -213,15 +237,16 @@ const Login = () => {
                       value={formData.email}
                       onChange={handleChange}
                       required
-                      placeholder="Enter your email"
+                      placeholder="Enter admin email"
                       className="w-full border border-gray-300 rounded-lg pl-11 pr-4 py-3.5 outline-none focus:border-[#072144] focus:ring-1 focus:ring-[#072144]"
                     />
 
                   </div>
-
                 </div>
 
-                {/* ================= PASSWORD ================= */}
+                {/* =================================================
+                    PASSWORD
+                ================================================= */}
 
                 <div>
 
@@ -231,11 +256,9 @@ const Login = () => {
                       Password
                     </label>
 
-                    {/* ================= FORGOT PASSWORD ================= */}
-
                     <Link
                       to="/forgot-password"
-                      className="text-sm text-blue-600 hover:text-[#072144] hover:underline transition"
+                      className="text-sm text-blue-600 hover:underline"
                     >
                       Forgot Password?
                     </Link>
@@ -244,9 +267,7 @@ const Login = () => {
 
                   <div className="relative">
 
-                    <FaLock
-                      className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"
-                    />
+                    <FaLock className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
 
                     <input
                       type={
@@ -258,14 +279,16 @@ const Login = () => {
                       value={formData.password}
                       onChange={handleChange}
                       required
-                      placeholder="Enter your password"
+                      placeholder="Enter admin password"
                       className="w-full border border-gray-300 rounded-lg pl-11 pr-12 py-3.5 outline-none focus:border-[#072144] focus:ring-1 focus:ring-[#072144]"
                     />
 
                     <button
                       type="button"
                       onClick={() =>
-                        setShowPassword(!showPassword)
+                        setShowPassword(
+                          !showPassword
+                        )
                       }
                       className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700"
                     >
@@ -277,10 +300,11 @@ const Login = () => {
                     </button>
 
                   </div>
-
                 </div>
 
-                {/* ================= LOGIN BUTTON ================= */}
+                {/* =================================================
+                    LOGIN BUTTON
+                ================================================= */}
 
                 <button
                   type="submit"
@@ -292,51 +316,36 @@ const Login = () => {
                     ? "Logging in..."
                     : "Login"}
 
-                  {!loading && <FaArrowRight />}
+                  {!loading && (
+                    <FaArrowRight />
+                  )}
 
                 </button>
 
               </form>
 
-              {/* ================= REGISTER ================= */}
+              {/* =================================================
+                  CUSTOMER LOGIN
+              ================================================= */}
 
-              <p className="mt-7 text-center text-sm text-gray-500">
-
-                Don't have an account?{" "}
-
-                <Link
-                  to="/register"
-                  className="font-semibold text-[#072144] hover:text-[#FCBC14]"
-                >
-                  Create Account
-                </Link>
-
-              </p>
-
-              {/* ================= ADMIN LOGIN ================= */}
-
-              <div className="mt-5 text-center">
+              <div className="mt-7 text-center">
 
                 <Link
-                  to="/admin-login"
-                  className="text-xs text-gray-400 hover:text-[#072144] transition"
+                  to="/login"
+                  className="text-sm font-semibold text-[#072144] hover:text-[#FCBC14]"
                 >
-                  Admin Login
+                  ← Customer Login
                 </Link>
 
               </div>
 
             </div>
-
           </div>
-
         </div>
-
       </main>
-
     </div>
   );
 };
 
-export default Login;
+export default AdminLogin;
 

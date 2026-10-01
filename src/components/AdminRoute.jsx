@@ -1,15 +1,65 @@
+
 import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
-import { isAdminAuthenticated } from "../utils/auth";
+
+import {
+  getCurrentAdmin,
+  isAdminAuthenticated,
+} from "../utils/auth";
 
 const AdminRoute = () => {
+  const currentAdmin = getCurrentAdmin();
   const authenticated = isAdminAuthenticated();
 
+  console.log(
+    "========== ADMIN ROUTE =========="
+  );
+
+  console.log(
+    "Current Admin:",
+    currentAdmin
+  );
+
+  console.log(
+    "Authenticated:",
+    authenticated
+  );
+
+  console.log(
+    "Role:",
+    currentAdmin?.role
+  );
+
+  console.log(
+    "Is Authenticated:",
+    currentAdmin?.isAuthenticated
+  );
+
+  console.log(
+    "================================="
+  );
+
+  // Login nahi hai
   if (!authenticated) {
-    return <Navigate to="/login" replace />;
+    console.log(
+      "ADMIN ROUTE → REDIRECTING TO /admin-login"
+    );
+
+    return (
+      <Navigate
+        to="/admin-login"
+        replace
+      />
+    );
   }
+
+  // Login successful
+  console.log(
+    "ADMIN ROUTE → ACCESS GRANTED"
+  );
 
   return <Outlet />;
 };
 
 export default AdminRoute;
+

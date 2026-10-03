@@ -1,311 +1,483 @@
+
 import React from "react";
 import { Link } from "react-router-dom";
+
 import {
   FaFacebookF,
   FaInstagram,
-  FaLinkedinIn,
-  FaArrowUp,
+  FaTiktok,
+  FaPhoneAlt,
+  FaEnvelope,
+  FaMapMarkerAlt,
+  FaArrowRight,
 } from "react-icons/fa";
 
 const Footer = () => {
   return (
-    <footer className="relative bg-gray-950 text-gray-300 overflow-hidden">
+    <footer className="relative overflow-hidden bg-[#061a35] text-gray-300">
 
-      {/* =================================================
-          BACKGROUND BRAND TEXT
-      ================================================= */}
-         {/* BACKGROUND BRAND TEXT */}
-<div
-  className="
-    absolute
-    right-0
-    bottom-0
-    w-2/4
-    overflow-hidden
-    pointer-events-none
-    select-none
-  "
->
-  <h2
-    className="
-      whitespace-nowrap
-      text-right
-      font-black
-      italic
-      uppercase
-      tracking-tighter
-      text-[clamp(20px,4vw,50px)]
-      leading-none
-      text-white/[0.080]
-    "
-  >
-    BOOK MY PROBLEM
-  </h2>
-</div>
+      {/* =====================================================
+          PREMIUM BACKGROUND EFFECTS
+      ===================================================== */}
 
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
 
-      {/* =================================================
-          MAIN FOOTER CONTENT
-      ================================================= */}
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-10">
+        {/* Top glow */}
+        <div className="absolute -top-40 left-1/4 w-96 h-96 bg-[#FCBC14]/10 rounded-full blur-3xl" />
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-10">
+        {/* Right glow */}
+        <div className="absolute top-1/3 -right-40 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl" />
 
+        {/* Large background text */}
+        <div className="absolute right-0 bottom-0 overflow-hidden select-none">
+          <h2
+            className="
+              whitespace-nowrap
+              font-black
+              italic
+              uppercase
+              tracking-tighter
+              text-[clamp(50px,11vw,160px)]
+              leading-none
+              text-white/[0.035]
+            "
+          >
+            BOOK MY PROBLEM
+          </h2>
+        </div>
 
-          {/* =================================================
-              BRAND
-          ================================================= */}
-          <div>
+      </div>
 
-            <Link
-              to="/"
-              className="inline-block text-2xl font-bold text-white"
-            >
-              Book My{" "}
-              <span className="text-blue-500">
-                Problem
-              </span>
-            </Link>
+      {/* =====================================================
+          MAIN CONTENT
+      ===================================================== */}
 
-            <p className="mt-4 text-gray-400 leading-7 max-w-sm">
-              Complete home construction, interior, renovation and
-              home improvement solutions.
-            </p>
+      <div className="relative z-10 max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
 
+        {/* ===================================================
+            TOP CTA
+        =================================================== */}
 
-            {/* SOCIAL */}
-            <div className="mt-6 flex gap-3">
+        
 
-              <a
-                href="#"
-                className="
-                  w-10
-                  h-10
-                  rounded-full
-                  bg-gray-800
-                  flex
-                  items-center
-                  justify-center
-                  hover:bg-blue-600
-                  hover:-translate-y-1
-                  transition
-                "
+        {/* ===================================================
+            FOOTER GRID
+        =================================================== */}
+
+        <div className="border-t border-white/10 pt-14 pb-14">
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-12 lg:gap-10">
+
+            {/* =================================================
+                BRAND
+            ================================================= */}
+
+            <div className="lg:pr-8">
+
+              <Link
+                to="/"
+                className="inline-flex items-center group"
               >
-                <FaFacebookF />
-              </a>
 
-              <a
-                href="#"
-                className="
-                  w-10
-                  h-10
-                  rounded-full
-                  bg-gray-800
-                  flex
-                  items-center
-                  justify-center
-                  hover:bg-pink-600
-                  hover:-translate-y-1
-                  transition
-                "
-              >
-                <FaInstagram />
-              </a>
+                <span className="text-2xl sm:text-3xl font-black tracking-tight text-white">
+                  Book My{" "}
+                  <span className="text-[#FCBC14]">
+                    Problem
+                  </span>
+                </span>
 
-              <a
-                href="#"
-                className="
-                  w-10
-                  h-10
-                  rounded-full
-                  bg-gray-800
-                  flex
-                  items-center
-                  justify-center
-                  hover:bg-blue-600
-                  hover:-translate-y-1
-                  transition
-                "
-              >
-                <FaLinkedinIn />
-              </a>
+              </Link>
+
+              <p className="mt-5 text-sm leading-7 text-gray-400 max-w-sm">
+                Complete home construction, interior, renovation and
+                home improvement solutions — all in one place.
+              </p>
+
+              {/* Social icons */}
+
+              <div className="mt-7 flex items-center gap-3">
+
+                {/* Facebook */}
+
+                <a
+                  href="https://www.facebook.com/profile.php?id=61556205387132"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Book My Problem Facebook"
+                  className="
+                    group
+                    w-10
+                    h-10
+                    rounded-xl
+                    border border-white/10
+                    bg-white/[0.04]
+                    flex
+                    items-center
+                    justify-center
+                    text-gray-400
+                    hover:bg-[#1877F2]
+                    hover:text-white
+                    hover:border-[#1877F2]
+                    hover:-translate-y-1
+                    transition-all
+                    duration-300
+                  "
+                >
+                  <FaFacebookF className="text-sm" />
+                </a>
+
+                {/* Instagram */}
+
+                <a
+                  href="https://www.instagram.com/bookmyproblempvtltd"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Book My Problem Instagram"
+                  className="
+                    group
+                    w-10
+                    h-10
+                    rounded-xl
+                    border border-white/10
+                    bg-white/[0.04]
+                    flex
+                    items-center
+                    justify-center
+                    text-gray-400
+                    hover:bg-gradient-to-tr
+                    hover:from-[#f58529]
+                    hover:via-[#dd2a7b]
+                    hover:to-[#8134af]
+                    hover:text-white
+                    hover:border-transparent
+                    hover:-translate-y-1
+                    transition-all
+                    duration-300
+                  "
+                >
+                  <FaInstagram className="text-sm" />
+                </a>
+
+                {/* TikTok */}
+
+                <a
+                  href="https://www.tiktok.com/@book.my.problem.p"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Book My Problem TikTok"
+                  className="
+                    group
+                    w-10
+                    h-10
+                    rounded-xl
+                    border border-white/10
+                    bg-white/[0.04]
+                    flex
+                    items-center
+                    justify-center
+                    text-gray-400
+                    hover:bg-black
+                    hover:text-white
+                    hover:border-white/20
+                    hover:-translate-y-1
+                    transition-all
+                    duration-300
+                  "
+                >
+                  <FaTiktok className="text-sm" />
+                </a>
+
+              </div>
 
             </div>
 
-          </div>
+            {/* =================================================
+                COMPANY
+            ================================================= */}
 
+            <div>
 
-          {/* =================================================
-              COMPANY
-          ================================================= */}
-          <div>
+              <h3 className="text-sm font-bold uppercase tracking-[0.18em] text-white">
+                Company
+              </h3>
 
-            <h3 className="font-bold text-white text-lg">
-              Company
-            </h3>
+              <div className="mt-6 space-y-4">
 
-            <div className="mt-5 space-y-3">
+                <Link
+                  to="/about"
+                  className="
+                    group
+                    flex
+                    items-center
+                    gap-2
+                    text-sm
+                    text-gray-400
+                    hover:text-[#FCBC14]
+                    transition
+                  "
+                >
+                  <span className="w-0 group-hover:w-2 h-px bg-[#FCBC14] transition-all duration-300" />
+                  About Us
+                </Link>
 
-              <Link
-                to="/about"
-                className="block hover:text-blue-400 transition"
-              >
-                About Us
-              </Link>
+                <Link
+                  to="/projects"
+                  className="
+                    group
+                    flex
+                    items-center
+                    gap-2
+                    text-sm
+                    text-gray-400
+                    hover:text-[#FCBC14]
+                    transition
+                  "
+                >
+                  <span className="w-0 group-hover:w-2 h-px bg-[#FCBC14] transition-all duration-300" />
+                  Projects
+                </Link>
 
-              <Link
-                to="/projects"
-                className="block hover:text-blue-400 transition"
-              >
-                Projects
-              </Link>
+                <Link
+                  to="/professionals"
+                  className="
+                    group
+                    flex
+                    items-center
+                    gap-2
+                    text-sm
+                    text-gray-400
+                    hover:text-[#FCBC14]
+                    transition
+                  "
+                >
+                  <span className="w-0 group-hover:w-2 h-px bg-[#FCBC14] transition-all duration-300" />
+                  Professionals
+                </Link>
 
-              <Link
-                to="/professionals"
-                className="block hover:text-blue-400 transition"
-              >
-                Professionals
-              </Link>
+                <Link
+                  to="/reviews"
+                  className="
+                    group
+                    flex
+                    items-center
+                    gap-2
+                    text-sm
+                    text-gray-400
+                    hover:text-[#FCBC14]
+                    transition
+                  "
+                >
+                  <span className="w-0 group-hover:w-2 h-px bg-[#FCBC14] transition-all duration-300" />
+                  Reviews
+                </Link>
 
-              <Link
-                to="/reviews"
-                className="block hover:text-blue-400 transition"
-              >
-                Reviews
-              </Link>
-
-            </div>
-
-          </div>
-
-
-          {/* =================================================
-              SERVICES
-          ================================================= */}
-          <div>
-
-            <h3 className="font-bold text-white text-lg">
-              Services
-            </h3>
-
-            <div className="mt-5 space-y-3">
-
-              <Link
-                to="/services"
-                className="block hover:text-blue-400 transition"
-              >
-                Construction
-              </Link>
-
-              <Link
-                to="/services"
-                className="block hover:text-blue-400 transition"
-              >
-                Interior Design
-              </Link>
-
-              <Link
-                to="/services"
-                className="block hover:text-blue-400 transition"
-              >
-                Renovation
-              </Link>
-
-              <Link
-                to="/services"
-                className="block hover:text-blue-400 transition"
-              >
-                Home Painting
-              </Link>
-
-              <Link
-                to="/services"
-                className="block hover:text-blue-400 transition"
-              >
-                Electrical Work
-              </Link>
+              </div>
 
             </div>
 
-          </div>
+            {/* =================================================
+                SERVICES
+            ================================================= */}
 
+            <div>
 
-          {/* =================================================
-              CONTACT
-          ================================================= */}
-          <div>
+              <h3 className="text-sm font-bold uppercase tracking-[0.18em] text-white">
+                Services
+              </h3>
 
-            <h3 className="font-bold text-white text-lg">
-              Contact
-            </h3>
+              <div className="mt-6 space-y-4">
 
-            <div className="mt-5 space-y-3 text-gray-400">
+                <Link
+                  to="/services"
+                  className="group flex items-center gap-2 text-sm text-gray-400 hover:text-[#FCBC14] transition"
+                >
+                  <span className="w-0 group-hover:w-2 h-px bg-[#FCBC14] transition-all duration-300" />
+                  Construction
+                </Link>
 
-              <p>
-                Kohalpur-10, Banke
-              </p>
+                <Link
+                  to="/services"
+                  className="group flex items-center gap-2 text-sm text-gray-400 hover:text-[#FCBC14] transition"
+                >
+                  <span className="w-0 group-hover:w-2 h-px bg-[#FCBC14] transition-all duration-300" />
+                  Interior Design
+                </Link>
 
-              <p>
-                081-534071
-              </p>
+                <Link
+                  to="/services"
+                  className="group flex items-center gap-2 text-sm text-gray-400 hover:text-[#FCBC14] transition"
+                >
+                  <span className="w-0 group-hover:w-2 h-px bg-[#FCBC14] transition-all duration-300" />
+                  Renovation
+                </Link>
 
-              <p>
-                98682219045
-              </p>
+                <Link
+                  to="/services"
+                  className="group flex items-center gap-2 text-sm text-gray-400 hover:text-[#FCBC14] transition"
+                >
+                  <span className="w-0 group-hover:w-2 h-px bg-[#FCBC14] transition-all duration-300" />
+                  Home Painting
+                </Link>
 
-              <p className="break-all">
-                bookmyproblem999@gmail.com
-              </p>
+                <Link
+                  to="/services"
+                  className="group flex items-center gap-2 text-sm text-gray-400 hover:text-[#FCBC14] transition"
+                >
+                  <span className="w-0 group-hover:w-2 h-px bg-[#FCBC14] transition-all duration-300" />
+                  Electrical Work
+                </Link>
+
+              </div>
 
             </div>
 
+            {/* =================================================
+                CONTACT
+            ================================================= */}
 
-           
+            <div>
+
+              <h3 className="text-sm font-bold uppercase tracking-[0.18em] text-white">
+                Contact
+              </h3>
+
+              <div className="mt-6 space-y-5">
+
+                {/* Location */}
+
+                <div className="flex gap-4">
+
+                  <div className="shrink-0 w-9 h-9 rounded-lg bg-[#FCBC14]/10 text-[#FCBC14] flex items-center justify-center">
+                    <FaMapMarkerAlt className="text-xs" />
+                  </div>
+
+                  <div>
+                    <p className="text-xs uppercase tracking-wider text-gray-500">
+                      Location
+                    </p>
+
+                    <p className="mt-1 text-sm text-gray-300">
+                      Kohalpur-10, Banke
+                    </p>
+                  </div>
+
+                </div>
+
+                {/* Phone */}
+
+                <div className="flex gap-4">
+
+                  <div className="shrink-0 w-9 h-9 rounded-lg bg-[#FCBC14]/10 text-[#FCBC14] flex items-center justify-center">
+                    <FaPhoneAlt className="text-xs" />
+                  </div>
+
+                  <div>
+                    <p className="text-xs uppercase tracking-wider text-gray-500">
+                      Phone
+                    </p>
+
+                    <a
+                      href="tel:081534071"
+                      className="mt-1 block text-sm text-gray-300 hover:text-[#FCBC14] transition"
+                    >
+                      081-534071
+                    </a>
+
+                    <a
+                      href="tel:98682219045"
+                      className="mt-1 block text-sm text-gray-300 hover:text-[#FCBC14] transition"
+                    >
+                      98682219045
+                    </a>
+                  </div>
+
+                </div>
+
+                {/* Email */}
+
+                <div className="flex gap-4">
+
+                  <div className="shrink-0 w-9 h-9 rounded-lg bg-[#FCBC14]/10 text-[#FCBC14] flex items-center justify-center">
+                    <FaEnvelope className="text-xs" />
+                  </div>
+
+                  <div className="min-w-0">
+
+                    <p className="text-xs uppercase tracking-wider text-gray-500">
+                      Email
+                    </p>
+
+                    <a
+                      href="mailto:bookmyproblem999@gmail.com"
+                      className="mt-1 block text-sm text-gray-300 hover:text-[#FCBC14] transition break-all"
+                    >
+                      bookmyproblem999@gmail.com
+                    </a>
+
+                  </div>
+
+                </div>
+
+              </div>
+
+            </div>
 
           </div>
 
         </div>
 
+        {/* ===================================================
+            BOTTOM BAR
+        =================================================== */}
 
-        {/* =================================================
-            BOTTOM
-        ================================================= */}
         <div
           className="
-            mt-12
-            pt-6
+            relative
             border-t
-            border-gray-800
+            border-white/10
+            py-6
             flex
             flex-col
             sm:flex-row
             items-center
             justify-between
             gap-4
-            text-sm
-            text-gray-500
           "
         >
 
-          <p>
-            © {new Date().getFullYear()} Hiveweb Solution.
-            All rights reserved.
+          <p className="text-xs sm:text-sm text-gray-500 text-center sm:text-left">
+            © {new Date().getFullYear()}{" "}
+            <span className="text-gray-300">
+              Book My Problem
+            </span>
+            . All rights reserved.
           </p>
 
-          <div className="flex items-center gap-5">
+          <div className="flex items-center gap-5 text-xs sm:text-sm">
 
             <Link
               to="/faqs"
-              className="hover:text-white transition"
+              className="text-gray-500 hover:text-[#FCBC14] transition"
             >
               FAQs
             </Link>
 
+            <span className="w-px h-4 bg-gray-700" />
+
             <Link
               to="/contact"
-              className="hover:text-white transition"
+              className="text-gray-500 hover:text-[#FCBC14] transition"
             >
               Contact
+            </Link>
+
+            <span className="w-px h-4 bg-gray-700" />
+
+            <Link
+              to="/privacy-policy"
+              className="text-gray-500 hover:text-[#FCBC14] transition"
+            >
+              Privacy
             </Link>
 
           </div>

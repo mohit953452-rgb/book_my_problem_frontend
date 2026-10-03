@@ -13,9 +13,6 @@ import MainLayout from "./Layout/MainLayout";
 // ================= CART CONTEXT =================
 import { CartProvider } from "./context/CartContext";
 
-// ================= WISHLIST CONTEXT =================
-import { WishlistProvider } from "./context/WishlistContext";
-
 // ================= ORDER CONTEXT =================
 import { OrderProvider } from "./context/OrderContext";
 
@@ -59,9 +56,6 @@ import ForgotPassword from "./pages/auth/ForgotPassword";
 // ================= CART =================
 import Cart from "./pages/Cart/Cart";
 
-// ================= WISHLIST =================
-import Wishlist from "./pages/Wishlist/Wishlist";
-
 // ================= BOOKING =================
 import BookingCheckout from "./pages/Booking/BookingCheckout";
 
@@ -69,16 +63,27 @@ import BookingCheckout from "./pages/Booking/BookingCheckout";
 import Orders from "./pages/Orders/Orders";
 import OrderDetails from "./pages/Orders/OrderDetails";
 
+// ================= CUSTOMER ACCOUNT =================
+import CustomerAccount from "./pages/Customer/CustomerAccount";
+import CustomerProfile from "./pages/Customer/CustomerProfile";
+import CustomerOrders from "./pages/Customer/CustomerOrders";
+import CustomerOrderDetails from "./pages/Customer/CustomerOrderDetails";
+import SavedAddresses from "./pages/Customer/SavedAddresses";
+
+// ================= SEARCH =================
+import SearchPage from "./pages/Search/SearchPage";
+
 // ================= ADMIN ROUTE =================
 import AdminRoute from "./components/AdminRoute";
 
 // ================= PERMISSION ROUTE =================
-// IMPORTANT:
-// PermissionRoute file is inside components/Admin/
 import PermissionRoute from "./components/PermissionRoute";
 
 // ================= PERMISSIONS =================
 import { PERMISSIONS } from "./utils/permissions";
+
+// ================= ADMIN LAYOUT =================
+import AdminLayout from "./pages/Admin/AdminLayout";
 
 // ================= ADMIN PAGES =================
 import AdminDashboard from "./pages/Admin/AdminDashboard";
@@ -122,9 +127,20 @@ const router = createBrowserRouter(
       ================================================= */}
 
       <Route path="/" element={<MainLayout />}>
+
         {/* ================= HOME ================= */}
 
-        <Route index element={<Home />} />
+        <Route
+          index
+          element={<Home />}
+        />
+
+        {/* ================= SEARCH ================= */}
+
+        <Route
+          path="search"
+          element={<SearchPage />}
+        />
 
         {/* ================= SERVICES ================= */}
 
@@ -237,7 +253,9 @@ const router = createBrowserRouter(
           path="contact"
           element={<Contact />}
         />
+
       </Route>
+
 
       {/* =================================================
           CART
@@ -248,14 +266,6 @@ const router = createBrowserRouter(
         element={<Cart />}
       />
 
-      {/* =================================================
-          WISHLIST
-      ================================================= */}
-
-      <Route
-        path="/wishlist"
-        element={<Wishlist />}
-      />
 
       {/* =================================================
           BOOKING
@@ -266,8 +276,9 @@ const router = createBrowserRouter(
         element={<BookingCheckout />}
       />
 
+
       {/* =================================================
-          ORDERS
+          EXISTING ORDERS
       ================================================= */}
 
       <Route
@@ -279,6 +290,37 @@ const router = createBrowserRouter(
         path="/orders/:orderId"
         element={<OrderDetails />}
       />
+
+
+      {/* =================================================
+          CUSTOMER ACCOUNT
+      ================================================= */}
+
+      <Route
+        path="/customer"
+        element={<CustomerAccount />}
+      />
+
+      <Route
+        path="/customer/profile"
+        element={<CustomerProfile />}
+      />
+
+      <Route
+        path="/customer/orders"
+        element={<CustomerOrders />}
+      />
+
+      <Route
+        path="/customer/orders/:orderId"
+        element={<CustomerOrderDetails />}
+      />
+
+      <Route
+        path="/customer/addresses"
+        element={<SavedAddresses />}
+      />
+
 
       {/* =================================================
           AUTHENTICATION
@@ -314,6 +356,7 @@ const router = createBrowserRouter(
         element={<ForgotPassword />}
       />
 
+
       {/* =================================================
           ADMIN AUTHENTICATED ROUTES
       ================================================= */}
@@ -321,213 +364,267 @@ const router = createBrowserRouter(
       <Route element={<AdminRoute />}>
 
         {/* =================================================
-            DASHBOARD
+            ADMIN LAYOUT
+            Sidebar + Navbar rendered only once
         ================================================= */}
 
-        <Route
-          element={
-            <PermissionRoute
-              permission={PERMISSIONS.DASHBOARD_VIEW}
-            />
-          }
-        >
-          <Route
-            path="/admin"
-            element={<AdminDashboard />}
-          />
+        <Route element={<AdminLayout />}>
+
+          {/* =================================================
+              DASHBOARD
+          ================================================= */}
 
           <Route
-            path="/admin/dashboard"
-            element={<AdminDashboard />}
-          />
+            element={
+              <PermissionRoute
+                permission={PERMISSIONS.DASHBOARD_VIEW}
+              />
+            }
+          >
+
+            <Route
+              path="/admin"
+              element={<AdminDashboard />}
+            />
+
+            <Route
+              path="/admin/dashboard"
+              element={<AdminDashboard />}
+            />
+
+          </Route>
+
+
+          {/* =================================================
+              PROJECTS / ORDERS
+          ================================================= */}
+
+          <Route
+            element={
+              <PermissionRoute
+                permission={PERMISSIONS.ORDERS_VIEW}
+              />
+            }
+          >
+
+            <Route
+              path="/admin/projects"
+              element={<AdminProjects />}
+            />
+
+          </Route>
+
+
+          {/* =================================================
+              CUSTOMERS
+          ================================================= */}
+
+          <Route
+            element={
+              <PermissionRoute
+                permission={PERMISSIONS.CUSTOMERS_VIEW}
+              />
+            }
+          >
+
+            <Route
+              path="/admin/customers"
+              element={<AdminCustomers />}
+            />
+
+          </Route>
+
+
+          {/* =================================================
+              ENQUIRIES
+          ================================================= */}
+
+          <Route
+            element={
+              <PermissionRoute
+                permission={PERMISSIONS.ENQUIRIES_VIEW}
+              />
+            }
+          >
+
+            <Route
+              path="/admin/enquiries"
+              element={<AdminEnquiries />}
+            />
+
+          </Route>
+
+
+          {/* =================================================
+              PROFESSIONALS
+          ================================================= */}
+
+          <Route
+            element={
+              <PermissionRoute
+                permission={PERMISSIONS.PROFESSIONALS_VIEW}
+              />
+            }
+          >
+
+            <Route
+              path="/admin/professionals"
+              element={<AdminProfessionals />}
+            />
+
+          </Route>
+
+
+          {/* =================================================
+              PAYMENTS
+          ================================================= */}
+
+          <Route
+            element={
+              <PermissionRoute
+                permission={PERMISSIONS.PAYMENTS_VIEW}
+              />
+            }
+          >
+
+            <Route
+              path="/admin/payments"
+              element={<AdminPayments />}
+            />
+
+          </Route>
+
+
+          {/* =================================================
+              REPORTS
+          ================================================= */}
+
+          <Route
+            element={
+              <PermissionRoute
+                permission={PERMISSIONS.REPORTS_VIEW}
+              />
+            }
+          >
+
+            <Route
+              path="/admin/reports"
+              element={<AdminReports />}
+            />
+
+          </Route>
+
+
+          {/* =================================================
+              NOTIFICATIONS
+          ================================================= */}
+
+          <Route
+            element={
+              <PermissionRoute
+                permission={PERMISSIONS.NOTIFICATIONS_VIEW}
+              />
+            }
+          >
+
+            <Route
+              path="/admin/notifications"
+              element={<AdminNotifications />}
+            />
+
+          </Route>
+
+
+          {/* =================================================
+              STAFF MANAGEMENT
+          ================================================= */}
+
+          <Route
+            element={
+              <PermissionRoute
+                permission={PERMISSIONS.STAFF_VIEW}
+              />
+            }
+          >
+
+            <Route
+              path="/admin/staff"
+              element={<StaffManagement />}
+            />
+
+            <Route
+              path="/admin/staff/invite"
+              element={<InviteStaff />}
+            />
+
+            <Route
+              path="/admin/staff/roles"
+              element={<RolesPermissions />}
+            />
+
+            <Route
+              path="/admin/staff/activity"
+              element={<StaffActivity />}
+            />
+
+          </Route>
+
+
+          {/* =================================================
+              SETTINGS + ADMIN PROFILE
+          ================================================= */}
+
+          <Route
+            element={
+              <PermissionRoute
+                permission={PERMISSIONS.SETTINGS_VIEW}
+              />
+            }
+          >
+
+            {/* ================= SETTINGS ================= */}
+
+            <Route
+              path="/admin/settings"
+              element={<AdminSettings />}
+            />
+
+            {/* ================= ADMIN PROFILE ================= */}
+
+            <Route
+              path="/admin/profile"
+              element={<AdminSettings />}
+            />
+
+          </Route>
+
         </Route>
 
-        {/* =================================================
-            PROJECTS / ORDERS
-        ================================================= */}
-
-        <Route
-          element={
-            <PermissionRoute
-              permission={PERMISSIONS.ORDERS_VIEW}
-            />
-          }
-        >
-          <Route
-            path="/admin/projects"
-            element={<AdminProjects />}
-          />
-        </Route>
-
-        {/* =================================================
-            CUSTOMERS
-        ================================================= */}
-
-        <Route
-          element={
-            <PermissionRoute
-              permission={PERMISSIONS.CUSTOMERS_VIEW}
-            />
-          }
-        >
-          <Route
-            path="/admin/customers"
-            element={<AdminCustomers />}
-          />
-        </Route>
-
-        {/* =================================================
-            ENQUIRIES
-        ================================================= */}
-
-        <Route
-          element={
-            <PermissionRoute
-              permission={PERMISSIONS.ENQUIRIES_VIEW}
-            />
-          }
-        >
-          <Route
-            path="/admin/enquiries"
-            element={<AdminEnquiries />}
-          />
-        </Route>
-
-        {/* =================================================
-            PROFESSIONALS
-        ================================================= */}
-
-        <Route
-          element={
-            <PermissionRoute
-              permission={PERMISSIONS.PROFESSIONALS_VIEW}
-            />
-          }
-        >
-          <Route
-            path="/admin/professionals"
-            element={<AdminProfessionals />}
-          />
-        </Route>
-
-        {/* =================================================
-            PAYMENTS
-        ================================================= */}
-
-        <Route
-          element={
-            <PermissionRoute
-              permission={PERMISSIONS.PAYMENTS_VIEW}
-            />
-          }
-        >
-          <Route
-            path="/admin/payments"
-            element={<AdminPayments />}
-          />
-        </Route>
-
-        {/* =================================================
-            REPORTS
-        ================================================= */}
-
-        <Route
-          element={
-            <PermissionRoute
-              permission={PERMISSIONS.REPORTS_VIEW}
-            />
-          }
-        >
-          <Route
-            path="/admin/reports"
-            element={<AdminReports />}
-          />
-        </Route>
-
-        {/* =================================================
-            NOTIFICATIONS
-        ================================================= */}
-
-        <Route
-          element={
-            <PermissionRoute
-              permission={PERMISSIONS.NOTIFICATIONS_VIEW}
-            />
-          }
-        >
-          <Route
-            path="/admin/notifications"
-            element={<AdminNotifications />}
-          />
-        </Route>
-
-        {/* =================================================
-            STAFF MANAGEMENT
-        ================================================= */}
-
-        <Route
-          element={
-            <PermissionRoute
-              permission={PERMISSIONS.STAFF_VIEW}
-            />
-          }
-        >
-          <Route
-            path="/admin/staff"
-            element={<StaffManagement />}
-          />
-
-          <Route
-            path="/admin/staff/invite"
-            element={<InviteStaff />}
-          />
-
-          <Route
-            path="/admin/staff/roles"
-            element={<RolesPermissions />}
-          />
-
-          <Route
-            path="/admin/staff/activity"
-            element={<StaffActivity />}
-          />
-        </Route>
-
-        {/* =================================================
-            SETTINGS
-        ================================================= */}
-
-        <Route
-          element={
-            <PermissionRoute
-              permission={PERMISSIONS.SETTINGS_VIEW}
-            />
-          }
-        >
-          <Route
-            path="/admin/settings"
-            element={<AdminSettings />}
-          />
-        </Route>
       </Route>
+
     </>
   )
 );
+
 
 // =====================================================
 // APP
 // =====================================================
 
 const App = () => {
+
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+
     const timer = setTimeout(() => {
       setLoading(false);
     }, 750);
 
     return () => clearTimeout(timer);
+
   }, []);
+
 
   // ================= PRELOADER =================
 
@@ -535,17 +632,21 @@ const App = () => {
     return <Preloader />;
   }
 
+
   // ================= MAIN APP =================
 
   return (
     <OrderProvider>
-      <WishlistProvider>
-        <CartProvider>
-          <RouterProvider router={router} />
-        </CartProvider>
-      </WishlistProvider>
+
+      <CartProvider>
+
+        <RouterProvider router={router} />
+
+      </CartProvider>
+
     </OrderProvider>
   );
 };
 
 export default App;
+

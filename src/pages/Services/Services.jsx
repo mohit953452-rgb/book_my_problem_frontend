@@ -7,7 +7,7 @@ const Services = () => {
     <div className="bg-white">
 
       {/* Hero */}
-      <section className="bg-gray-50 py-16 sm:py-20 text-center">
+      <section className="bg-gray-50 py-4 sm:py-8 text-center">
 
         <div className="max-w-3xl mx-auto px-4">
 
@@ -29,7 +29,7 @@ const Services = () => {
       </section>
 
       {/* Services */}
-      <section className="py-16">
+      <section className="pt-0 pb-8">
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
 

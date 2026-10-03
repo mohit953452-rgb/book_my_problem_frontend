@@ -7,7 +7,7 @@ import ProjectCard from "../../components/ProjectCard/ProjectCard";
 import Testimonial from "../../components/Testimonial/Testimonial";
 import ChooseUs from "../../components/ChooseUs/ChooseUs";
 import HowWork from "../../components/HowWork/HowWork";
-
+import PopularSearches from "../../components/PopularSearches/PopularSearches";
 
 import services from "../../data/Services";
 import designData from "../../data/designData";
@@ -23,6 +23,8 @@ const Home = () => {
   return (
     <>
       <Hero />
+
+      <PopularSearches />
 
       {/* Services */}
       <section className="py-16 sm:py-20">

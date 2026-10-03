@@ -25,7 +25,10 @@ import {
   FaChevronRight,
 } from "react-icons/fa";
 
-import { useNavigate, Link } from "react-router-dom";
+import {
+  useNavigate,
+  Link,
+} from "react-router-dom";
 
 const AdminSidebar = ({
   sidebarOpen,
@@ -35,22 +38,22 @@ const AdminSidebar = ({
 }) => {
   const navigate = useNavigate();
 
-  // ================= LOGO NAVIGATION =================
-
-  const handleNavigation = (path) => {
-    navigate(path);
-  };
-
   // ================= LOGOUT =================
 
   const handleLogout = () => {
     logoutAdmin();
+    setSidebarOpen(false);
     navigate("/login");
   };
 
-  // ================= SIDEBAR MENU =================
+  // ================= MENU =================
 
   const menuItems = [
+    {
+      label: "Home",
+      path: "/",
+      icon: FaHome,
+    },
     {
       label: "Dashboard",
       path: "/admin/dashboard",
@@ -115,25 +118,45 @@ const AdminSidebar = ({
 
   return (
     <>
-      {/* ================= MOBILE OVERLAY ================= */}
+      {/* =================================================
+          MOBILE OVERLAY
+      ================================================= */}
 
       {sidebarOpen && (
         <div
-          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          className="
+            fixed
+            inset-0
+            bg-black/50
+            z-40
+            lg:hidden
+          "
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
-      {/* ================= SIDEBAR ================= */}
+      {/* =================================================
+          SIDEBAR
+          NAVBAR KE 80px KE NICHE SE START HOGA
+      ================================================= */}
 
       <aside
         className={`
-          fixed top-0 left-0 h-screen
-          bg-[#072144] text-white z-50
-          transition-all duration-300 ease-in-out
-          flex flex-col
+          fixed
+          top-15
+          left-0
+          h-[calc(100vh-5rem)]
+          bg-[#072144]
+          text-white
+          z-50
+          flex
+          flex-col
+          transition-all
+          duration-300
+          ease-in-out
+          shadow-xl
 
-          ${sidebarCollapsed ? "lg:w-20" : "lg:w-64"}
+          ${sidebarCollapsed ? "lg:w-20" : "lg:w-60"}
 
           w-64
 
@@ -144,79 +167,39 @@ const AdminSidebar = ({
           }
         `}
       >
-        {/* ================= SIDEBAR HEADER ================= */}
 
-        <div
-          className={`
-            h-20 flex items-center
-            border-b border-white/10
-            flex-shrink-0
+        {/* =================================================
+            MOBILE CLOSE BUTTON
+        ================================================= */}
 
-            ${
-              sidebarCollapsed
-                ? "justify-center px-2"
-                : "justify-between px-5"
-            }
-          `}
+        <button
+          type="button"
+          onClick={() => setSidebarOpen(false)}
+          className="
+            lg:hidden
+            absolute
+            top-3
+            right-3
+            w-9
+            h-9
+            rounded-lg
+            flex
+            items-center
+            justify-center
+            bg-white/10
+            hover:bg-[#FCBC14]
+            hover:text-[#072144]
+            transition
+            z-[100]
+          "
+          title="Close Menu"
         >
-          {/* Logo */}
+          <FaTimes />
+        </button>
 
-          <button
-            type="button"
-            onClick={() =>
-              handleNavigation("/admin/dashboard")
-            }
-            className="flex items-center gap-3"
-            title="Admin Dashboard"
-          >
-            <div
-              className="
-                w-10 h-10 rounded-lg
-                bg-white
-                flex items-center justify-center
-                overflow-hidden
-                flex-shrink-0
-              "
-            >
-              <img
-                src="/Logo.png"
-                alt="Book My Problem"
-                className="w-full h-full object-contain"
-              />
-            </div>
-
-            {!sidebarCollapsed && (
-              <div className="text-left">
-                <h1 className="text-lg font-bold leading-none">
-                  Book My Problem
-                </h1>
-
-                <p className="text-xs text-gray-300 mt-1">
-                  Admin Panel
-                </p>
-              </div>
-            )}
-          </button>
-
-          {/* Mobile Close Button */}
-
-          <button
-            type="button"
-            onClick={() => setSidebarOpen(false)}
-            className="
-              lg:hidden
-              w-9 h-9 rounded-lg
-              flex items-center justify-center
-              bg-white/10
-              hover:bg-white/20
-              transition
-            "
-          >
-            <FaTimes />
-          </button>
-        </div>
-
-        {/* ================= COLLAPSE BUTTON ================= */}
+        {/* =================================================
+            COLLAPSE BUTTON
+        ================================================= */}
 
         <button
           type="button"
@@ -229,16 +212,25 @@ const AdminSidebar = ({
               : "Minimize Sidebar"
           }
           className="
-            hidden lg:flex
-            absolute top-24 -right-3
-            w-7 h-7 rounded-full
+            hidden
+            lg:flex
+            absolute
+            top-6
+            -right-3
+            w-7
+            h-7
+            rounded-full
             bg-[#FCBC14]
             text-[#072144]
-            items-center justify-center
+            items-center
+            justify-center
             shadow-lg
             hover:scale-110
-            transition-all duration-200
+            transition-all
+            duration-200
             z-[100]
+            border-2
+            border-white
           "
         >
           {sidebarCollapsed ? (
@@ -248,23 +240,25 @@ const AdminSidebar = ({
           )}
         </button>
 
-        {/* ================= SIDEBAR MENU ================= */}
+        {/* =================================================
+            MENU
+        ================================================= */}
 
         <nav
           className="
             flex-1
-            px-3 py-3
-            overflow-y-auto
-
-            [scrollbar-width:none]
-            [-ms-overflow-style:none]
-            [&::-webkit-scrollbar]:hidden
+            px-2.5
+            py-4
+            overflow-hidden
           "
         >
-          <div className="space-y-1">
+          <div className="space-y-0.5">
+
             {menuItems
-              .filter((item) =>
-                hasPermission(item.permission)
+              .filter(
+                (item) =>
+                  !item.permission ||
+                  hasPermission(item.permission)
               )
               .map((item) => {
                 const Icon = item.icon;
@@ -274,7 +268,14 @@ const AdminSidebar = ({
                     key={item.path}
                     to={item.path}
                     onClick={() => {
-                      // Sirf Settings par mobile sidebar close hoga
+
+                      /*
+                        Kisi bhi menu par click karne se
+                        sidebar close nahi hoga.
+
+                        Sirf mobile Settings par close hoga.
+                      */
+
                       if (
                         item.path === "/admin/settings" &&
                         window.innerWidth < 1024
@@ -282,40 +283,58 @@ const AdminSidebar = ({
                         setSidebarOpen(false);
                       }
                     }}
-                    title={
-                      sidebarCollapsed
-                        ? item.label
-                        : ""
-                    }
                     className={`
                       group
                       relative
                       w-full
-                      flex items-center
-                      gap-3
+                      flex
+                      items-center
+                      gap-2.5
                       rounded-lg
-                      py-3
+                      py-2.5
+
                       text-gray-200
+
                       hover:bg-white/10
                       hover:text-white
-                      transition-all duration-200
+
+                      transition-all
+                      duration-200
 
                       ${
                         sidebarCollapsed
                           ? "justify-center px-2"
-                          : "px-4"
+                          : "px-3"
                       }
                     `}
                   >
-                    <Icon className="text-lg flex-shrink-0" />
+
+                    {/* ICON */}
+
+                    <Icon
+                      className="
+                        text-[17px]
+                        flex-shrink-0
+                      "
+                    />
+
+                    {/* LABEL */}
 
                     {!sidebarCollapsed && (
-                      <span className="text-sm font-medium whitespace-nowrap">
+                      <span
+                        className="
+                          text-[13px]
+                          font-medium
+                          whitespace-nowrap
+                        "
+                      >
                         {item.label}
                       </span>
                     )}
 
-                    {/* ================= COLLAPSED TOOLTIP ================= */}
+                    {/* =================================================
+                        COLLAPSED TOOLTIP
+                    ================================================= */}
 
                     {sidebarCollapsed && (
                       <span
@@ -323,13 +342,20 @@ const AdminSidebar = ({
                           absolute
                           left-full
                           ml-3
+                          top-1/2
+                          -translate-y-1/2
+
                           px-3
                           py-2
+
                           rounded-md
+
                           bg-[#FCBC14]
                           text-[#072144]
+
                           text-xs
                           font-semibold
+
                           whitespace-nowrap
 
                           opacity-0
@@ -343,64 +369,86 @@ const AdminSidebar = ({
 
                           z-[200]
                           shadow-lg
+
+                          pointer-events-none
                         "
                       >
                         {item.label}
                       </span>
                     )}
+
                   </Link>
                 );
               })}
+
           </div>
         </nav>
 
-        {/* ================= LOGOUT ================= */}
+        {/* =================================================
+            LOGOUT
+        ================================================= */}
 
         <div
           className="
-            p-3
-            border-t border-white/10
+            p-2.5
+            border-t
+            border-white/10
             flex-shrink-0
           "
         >
           <button
             type="button"
             onClick={handleLogout}
-            title={
-              sidebarCollapsed
-                ? "Logout"
-                : ""
-            }
             className={`
               group
               relative
               w-full
-              flex items-center
-              gap-3
+              flex
+              items-center
+              gap-2.5
               rounded-lg
-              py-3
+              py-2.5
 
               text-red-300
+
               hover:bg-red-500/10
               hover:text-red-200
-              transition-all
+
+              transition
 
               ${
                 sidebarCollapsed
                   ? "justify-center px-2"
-                  : "px-4"
+                  : "px-3"
               }
             `}
           >
-            <FaSignOutAlt className="text-lg flex-shrink-0" />
+
+            {/* ICON */}
+
+            <FaSignOutAlt
+              className="
+                text-[17px]
+                flex-shrink-0
+              "
+            />
+
+            {/* TEXT */}
 
             {!sidebarCollapsed && (
-              <span className="text-sm font-medium">
+              <span
+                className="
+                  text-[13px]
+                  font-medium
+                "
+              >
                 Logout
               </span>
             )}
 
-            {/* ================= LOGOUT TOOLTIP ================= */}
+            {/* =================================================
+                LOGOUT TOOLTIP
+            ================================================= */}
 
             {sidebarCollapsed && (
               <span
@@ -408,13 +456,20 @@ const AdminSidebar = ({
                   absolute
                   left-full
                   ml-3
+                  top-1/2
+                  -translate-y-1/2
+
                   px-3
                   py-2
+
                   rounded-md
+
                   bg-[#FCBC14]
                   text-[#072144]
+
                   text-xs
                   font-semibold
+
                   whitespace-nowrap
 
                   opacity-0
@@ -428,16 +483,21 @@ const AdminSidebar = ({
 
                   z-[200]
                   shadow-lg
+
+                  pointer-events-none
                 "
               >
                 Logout
               </span>
             )}
+
           </button>
         </div>
+
       </aside>
     </>
   );
 };
 
 export default AdminSidebar;
+
